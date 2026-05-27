@@ -16,45 +16,411 @@
     }
   ],
   "games": [
-    { "id": 1, "title": "Elden Ring", "genre": "RPG", "developer": "FromSoftware", "year": 2022, "platforms": ["PC", "PS5", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co4jni.jpg", "summary": "An open-world action RPG set in the Lands Between, crafted with George R. R. Martin.", "featured": true },
-    { "id": 2, "title": "The Witcher 3: Wild Hunt", "genre": "RPG", "developer": "CD Projekt Red", "year": 2015, "platforms": ["PC", "PS5", "Switch"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg", "summary": "Geralt of Rivia hunts the Wild Hunt across a sprawling fantasy world.", "featured": true },
-    { "id": 3, "title": "Hades", "genre": "Roguelike", "developer": "Supergiant Games", "year": 2020, "platforms": ["PC", "Switch", "PS5"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co39vc.jpg", "summary": "Escape the Underworld in this fast, mythologically-charged roguelike.", "featured": true },
-    { "id": 4, "title": "Hollow Knight", "genre": "Metroidvania", "developer": "Team Cherry", "year": 2017, "platforms": ["PC", "Switch", "PS4"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co93cr.jpg", "summary": "A hand-drawn metroidvania set in the haunting kingdom of Hallownest.", "featured": true },
-    { "id": 5, "title": "Stardew Valley", "genre": "Simulation", "developer": "ConcernedApe", "year": 2016, "platforms": ["PC", "Switch", "Mobile"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/xrpmydnu9rpxvxfjkiu7.jpg", "summary": "Inherit your grandfather's old farm and start a new life.", "featured": false },
-    { "id": 6, "title": "Celeste", "genre": "Platformer", "developer": "Maddy Makes Games", "year": 2018, "platforms": ["PC", "Switch"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co2dto.jpg", "summary": "Climb Celeste Mountain in this challenging, story-rich platformer.", "featured": false },
-    { "id": 7, "title": "Dark Souls III", "genre": "RPG", "developer": "FromSoftware", "year": 2016, "platforms": ["PC", "PS4", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1vcf.jpg", "summary": "The final chapter of the iconic Souls trilogy.", "featured": false },
-    { "id": 8, "title": "Portal 2", "genre": "Puzzle", "developer": "Valve", "year": 2011, "platforms": ["PC", "PS3", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rbo.jpg", "summary": "A mind-bending puzzle game starring Chell, GLaDOS, and Wheatley.", "featured": true },
-    { "id": 9, "title": "Cyberpunk 2077", "genre": "RPG", "developer": "CD Projekt Red", "year": 2020, "platforms": ["PC", "PS5", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co7497.jpg", "summary": "An open-world RPG in the neon-soaked Night City.", "featured": false },
-    { "id": 10, "title": "Counter-Strike 2", "genre": "FPS", "developer": "Valve", "year": 2023, "platforms": ["PC"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co6phk.jpg", "summary": "The legendary tactical shooter, rebuilt on Source 2.", "featured": false },
-    { "id": 11, "title": "Minecraft", "genre": "Sandbox", "developer": "Mojang", "year": 2011, "platforms": ["PC", "Switch", "Mobile", "Xbox", "PS5"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co49x5.jpg", "summary": "Build, mine, and survive in an endlessly procedural world.", "featured": false },
-    { "id": 12, "title": "Baldur's Gate 3", "genre": "RPG", "developer": "Larian Studios", "year": 2023, "platforms": ["PC", "PS5", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co670h.jpg", "summary": "Gather your party in a vast D&D-based fantasy adventure.", "featured": true },
-    { "id": 13, "title": "Sekiro: Shadows Die Twice", "genre": "Action", "developer": "FromSoftware", "year": 2019, "platforms": ["PC", "PS4", "Xbox"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rbb.jpg", "summary": "A katana-driven action adventure set in Sengoku-era Japan.", "featured": false },
-    { "id": 14, "title": "Among Us", "genre": "Party", "developer": "Innersloth", "year": 2018, "platforms": ["PC", "Mobile", "Switch"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co26f7.jpg", "summary": "Find the impostor before they sabotage your crew.", "featured": false },
-    { "id": 15, "title": "Disco Elysium", "genre": "RPG", "developer": "ZA/UM", "year": 2019, "platforms": ["PC", "PS5", "Switch"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rb2.jpg", "summary": "A groundbreaking detective RPG with no combat — only choices.", "featured": false },
-    { "id": 16, "title": "Factorio", "genre": "Simulation", "developer": "Wube Software", "year": 2020, "platforms": ["PC", "Switch"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1tfj.jpg", "summary": "Build and automate sprawling factories on an alien planet.", "featured": false },
-    { "id": 17, "title": "Death Stranding", "genre": "Action", "developer": "Kojima Productions", "year": 2019, "platforms": ["PC", "PS5"], "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co2gn8.jpg", "summary": "Reconnect a fractured America in Hideo Kojima's strangest world.", "featured": false }
+    {
+      "id": 1,
+      "title": "Elden Ring",
+      "genre": "RPG",
+      "developer": "FromSoftware",
+      "year": 2022,
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co4jni.jpg",
+      "summary": "An open-world action RPG set in the Lands Between, crafted with George R. R. Martin.",
+      "featured": true
+    },
+    {
+      "id": 2,
+      "title": "The Witcher 3: Wild Hunt",
+      "genre": "RPG",
+      "developer": "CD Projekt Red",
+      "year": 2015,
+      "platforms": [
+        "PC",
+        "PS5",
+        "Switch"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg",
+      "summary": "Geralt of Rivia hunts the Wild Hunt across a sprawling fantasy world.",
+      "featured": true
+    },
+    {
+      "id": 3,
+      "title": "Hades",
+      "genre": "Roguelike",
+      "developer": "Supergiant Games",
+      "year": 2020,
+      "platforms": [
+        "PC",
+        "Switch",
+        "PS5"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co39vc.jpg",
+      "summary": "Escape the Underworld in this fast, mythologically-charged roguelike.",
+      "featured": true
+    },
+    {
+      "id": 4,
+      "title": "Hollow Knight",
+      "genre": "Metroidvania",
+      "developer": "Team Cherry",
+      "year": 2017,
+      "platforms": [
+        "PC",
+        "Switch",
+        "PS4"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co93cr.jpg",
+      "summary": "A hand-drawn metroidvania set in the haunting kingdom of Hallownest.",
+      "featured": true
+    },
+    {
+      "id": 5,
+      "title": "Stardew Valley",
+      "genre": "Simulation",
+      "developer": "ConcernedApe",
+      "year": 2016,
+      "platforms": [
+        "PC",
+        "Switch",
+        "Mobile"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/xrpmydnu9rpxvxfjkiu7.jpg",
+      "summary": "Inherit your grandfather's old farm and start a new life.",
+      "featured": false
+    },
+    {
+      "id": 6,
+      "title": "Celeste",
+      "genre": "Platformer",
+      "developer": "Maddy Makes Games",
+      "year": 2018,
+      "platforms": [
+        "PC",
+        "Switch"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co2dto.jpg",
+      "summary": "Climb Celeste Mountain in this challenging, story-rich platformer.",
+      "featured": false
+    },
+    {
+      "id": 7,
+      "title": "Dark Souls III",
+      "genre": "RPG",
+      "developer": "FromSoftware",
+      "year": 2016,
+      "platforms": [
+        "PC",
+        "PS4",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1vcf.jpg",
+      "summary": "The final chapter of the iconic Souls trilogy.",
+      "featured": false
+    },
+    {
+      "id": 8,
+      "title": "Portal 2",
+      "genre": "Puzzle",
+      "developer": "Valve",
+      "year": 2011,
+      "platforms": [
+        "PC",
+        "PS3",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rbo.jpg",
+      "summary": "A mind-bending puzzle game starring Chell, GLaDOS, and Wheatley.",
+      "featured": true
+    },
+    {
+      "id": 9,
+      "title": "Cyberpunk 2077",
+      "genre": "RPG",
+      "developer": "CD Projekt Red",
+      "year": 2020,
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co7497.jpg",
+      "summary": "An open-world RPG in the neon-soaked Night City.",
+      "featured": false
+    },
+    {
+      "id": 10,
+      "title": "Counter-Strike 2",
+      "genre": "FPS",
+      "developer": "Valve",
+      "year": 2023,
+      "platforms": [
+        "PC"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co6phk.jpg",
+      "summary": "The legendary tactical shooter, rebuilt on Source 2.",
+      "featured": false
+    },
+    {
+      "id": 11,
+      "title": "Minecraft",
+      "genre": "Sandbox",
+      "developer": "Mojang",
+      "year": 2011,
+      "platforms": [
+        "PC",
+        "Switch",
+        "Mobile",
+        "Xbox",
+        "PS5"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co49x5.jpg",
+      "summary": "Build, mine, and survive in an endlessly procedural world.",
+      "featured": false
+    },
+    {
+      "id": 12,
+      "title": "Baldur's Gate 3",
+      "genre": "RPG",
+      "developer": "Larian Studios",
+      "year": 2023,
+      "platforms": [
+        "PC",
+        "PS5",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co670h.jpg",
+      "summary": "Gather your party in a vast D&D-based fantasy adventure.",
+      "featured": true
+    },
+    {
+      "id": 13,
+      "title": "Sekiro: Shadows Die Twice",
+      "genre": "Action",
+      "developer": "FromSoftware",
+      "year": 2019,
+      "platforms": [
+        "PC",
+        "PS4",
+        "Xbox"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rbb.jpg",
+      "summary": "A katana-driven action adventure set in Sengoku-era Japan.",
+      "featured": false
+    },
+    {
+      "id": 14,
+      "title": "Among Us",
+      "genre": "Party",
+      "developer": "Innersloth",
+      "year": 2018,
+      "platforms": [
+        "PC",
+        "Mobile",
+        "Switch"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co26f7.jpg",
+      "summary": "Find the impostor before they sabotage your crew.",
+      "featured": false
+    },
+    {
+      "id": 15,
+      "title": "Disco Elysium",
+      "genre": "RPG",
+      "developer": "ZA/UM",
+      "year": 2019,
+      "platforms": [
+        "PC",
+        "PS5",
+        "Switch"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1rb2.jpg",
+      "summary": "A groundbreaking detective RPG with no combat — only choices.",
+      "featured": false
+    },
+    {
+      "id": 16,
+      "title": "Factorio",
+      "genre": "Simulation",
+      "developer": "Wube Software",
+      "year": 2020,
+      "platforms": [
+        "PC",
+        "Switch"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1tfj.jpg",
+      "summary": "Build and automate sprawling factories on an alien planet.",
+      "featured": false
+    },
+    {
+      "id": 17,
+      "title": "Death Stranding",
+      "genre": "Action",
+      "developer": "Kojima Productions",
+      "year": 2019,
+      "platforms": [
+        "PC",
+        "PS5"
+      ],
+      "cover": "https://images.igdb.com/igdb/image/upload/t_cover_big/co2gn8.jpg",
+      "summary": "Reconnect a fractured America in Hideo Kojima's strangest world.",
+      "featured": false
+    }
   ],
   "reviews": [
-    { "id": 1, "gameId": 1, "userId": 2, "rating": 5, "title": "Masterpiece", "body": "An incredible open-world experience.", "createdAt": "2026-02-01T10:00:00.000Z" },
-    { "id": 2, "gameId": 3, "userId": 2, "rating": 5, "title": "One more run", "body": "Best roguelike I have ever played.", "createdAt": "2026-02-03T12:00:00.000Z" },
-    { "id": 3, "gameId": 8, "userId": 1, "rating": 5, "title": "Still holds up", "body": "Writing, pacing, and puzzles are perfect.", "createdAt": "2026-02-05T15:00:00.000Z" }
+    {
+      "id": 1,
+      "gameId": 1,
+      "userId": 2,
+      "rating": 5,
+      "title": "Masterpiece",
+      "body": "An incredible open-world experience.",
+      "createdAt": "2026-02-01T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "gameId": 3,
+      "userId": 2,
+      "rating": 5,
+      "title": "One more run",
+      "body": "Best roguelike I have ever played.",
+      "createdAt": "2026-02-03T12:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "gameId": 8,
+      "userId": 1,
+      "rating": 5,
+      "title": "Still holds up",
+      "body": "Writing, pacing, and puzzles are perfect.",
+      "createdAt": "2026-02-05T15:00:00.000Z"
+    },
+    {
+      "gameId": 1,
+      "userId": 1,
+      "rating": 4,
+      "title": "kingtiger",
+      "body": "nice game hello world",
+      "createdAt": "2026-05-27T04:20:31.478Z",
+      "id": 4
+    },
+    {
+      "gameId": 7,
+      "userId": 1,
+      "rating": 3,
+      "title": "many bugs",
+      "body": "not fun game, no hardcore",
+      "createdAt": "2026-05-27T04:21:06.017Z",
+      "id": 5
+    },
+    {
+      "gameId": 1,
+      "userId": 1,
+      "rating": 1,
+      "title": "solobolero",
+      "body": "very very bad gameeeeeeeee",
+      "createdAt": "2026-05-27T04:37:11.161Z",
+      "id": 6
+    },
+    {
+      "gameId": 8,
+      "userId": 1,
+      "rating": 2,
+      "title": "kingtiger",
+      "body": "i don't like this gameeeeeeeee",
+      "createdAt": "2026-05-27T04:38:04.531Z",
+      "id": 7
+    },
+    {
+      "gameId": 1,
+      "userId": 1,
+      "rating": 4,
+      "title": "gưgfwdsgswg",
+      "body": "gsegsdgsdgsgsd",
+      "createdAt": "2026-05-27T04:45:34.494Z",
+      "id": 8
+    },
+    {
+      "gameId": 1,
+      "userId": 1,
+      "rating": 5,
+      "title": "gsfgsfgsfg",
+      "body": "55555555555555555555555",
+      "createdAt": "2026-05-27T04:45:42.029Z",
+      "id": 9
+    }
   ],
   "tierlists": [
-    { "id": 1, "userId": 2, "title": "Best Soulslikes Ever", "description": "From's greatest hits, ranked.", "tiers": { "S": [1, 13], "A": [7], "B": [], "C": [], "D": [] }, "createdAt": "2026-02-10T09:00:00.000Z" }
+    {
+      "id": 1,
+      "userId": 2,
+      "title": "Best Soulslikes Ever",
+      "description": "From's greatest hits, ranked.",
+      "tiers": {
+        "S": [
+          1,
+          13
+        ],
+        "A": [
+          7
+        ],
+        "B": [],
+        "C": [],
+        "D": []
+      },
+      "createdAt": "2026-02-10T09:00:00.000Z"
+    }
   ],
   "votes": [
-    { "id": 1, "reviewId": 1, "userId": 1 }
+    {
+      "id": 1,
+      "reviewId": 1,
+      "userId": 1,
+      "createdAt": "2026-05-27T03:45:59.149Z"
+    }
   ],
   "genres": [
-    { "id": 1, "name": "RPG" },
-    { "id": 2, "name": "FPS" },
-    { "id": 3, "name": "Roguelike" },
-    { "id": 4, "name": "Metroidvania" },
-    { "id": 5, "name": "Simulation" },
-    { "id": 6, "name": "Platformer" },
-    { "id": 7, "name": "Puzzle" },
-    { "id": 8, "name": "Sandbox" },
-    { "id": 9, "name": "Action" },
-    { "id": 10, "name": "Party" }
+    {
+      "id": 1,
+      "name": "RPG"
+    },
+    {
+      "id": 2,
+      "name": "FPS"
+    },
+    {
+      "id": 3,
+      "name": "Roguelike"
+    },
+    {
+      "id": 4,
+      "name": "Metroidvania"
+    },
+    {
+      "id": 5,
+      "name": "Simulation"
+    },
+    {
+      "id": 6,
+      "name": "Platformer"
+    },
+    {
+      "id": 7,
+      "name": "Puzzle"
+    },
+    {
+      "id": 8,
+      "name": "Sandbox"
+    },
+    {
+      "id": 9,
+      "name": "Action"
+    },
+    {
+      "id": 10,
+      "name": "Party"
+    }
   ]
 }
