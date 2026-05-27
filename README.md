@@ -79,7 +79,7 @@ project/
 | Member | Owns | Files / Routes |
 |---|---|---|
 | **1** | Auth & Profiles | `LoginView`, `RegisterView`, `ProfileView`, `stores/auth.js`, route guards in `router/index.js` |
-| **2** ✅ | Games browse & detail | `HomeView`, `GamesView`, `GameDetailView`, `components/GameCard.vue` |
+| **2**  | Games browse & detail | `HomeView`, `GamesView`, `GameDetailView`, `components/GameCard.vue` |
 | **3** | Reviews & Ratings | Review list & form inside `GameDetailView`, new `ReviewForm.vue`, `StarRating.vue` components, paginate reviews |
 | **4** | Tier Lists | `TierlistsView`, `TierlistBuilderView`, `TierlistDetailView`, drag-and-drop component |
 | **5** | Social & Admin | Upvote button on reviews (`votes` collection), `AdminView` (CRUD games, moderate reviews), polish `AboutView` / `NotFoundView` |
