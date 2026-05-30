@@ -67,10 +67,15 @@ function normaliseGame(input, existing = {}) {
   }
 }
 
+// [Person 5] removing a review now also clears its reports
 function removeReviewWithVotes(reviewId) {
   db().get('votes').remove({ reviewId }).write()
+  db().get('reports').remove({ reviewId }).write()
   return db().get('reviews').remove({ id: reviewId }).write()
 }
+
+// [Person 5] allowed reasons a user can pick when flagging a review
+const REPORT_REASONS = ['Spam or advertising', 'Harassment or hate', 'Off-topic', 'Spoilers', 'Other']
 
 // Backend endpoint for the social feature. It prevents duplicate likes by the same user.
 server.post('/votes', requireAuth, (req, res) => {
@@ -113,19 +118,54 @@ server.delete('/votes/:id', requireAuth, (req, res) => {
   res.status(204).end()
 })
 
-// Admin-only endpoints used by the dashboard.
+
+
+server.post('/reports', requireAuth, (req, res) => {
+  const reviewId = Number(req.body.reviewId)
+  const userId = Number(req.currentUser.id)
+  const reason = String(req.body.reason || '').trim()
+  const note = String(req.body.note || '').trim().slice(0, 280)
+
+  if (!reviewId) return res.status(400).json({ message: 'A review id is required.' })
+  if (!REPORT_REASONS.includes(reason)) {
+    return res.status(400).json({ message: 'Please choose a valid report reason.' })
+  }
+
+  const review = db().get('reviews').find({ id: reviewId }).value()
+  if (!review) return res.status(404).json({ message: 'Review not found.' })
+
+  const existing = db().get('reports').find({ reviewId, userId, status: 'open' }).value()
+  if (existing) return res.status(409).json({ message: 'You have already reported this review.' })
+
+  const report = {
+    id: nextId('reports'),
+    reviewId,
+    userId,
+    reason,
+    note,
+    status: 'open',
+    createdAt: new Date().toISOString()
+  }
+
+  db().get('reports').push(report).write()
+  res.status(201).json(report)
+})
+
+
 server.get('/admin/stats', requireAdmin, (req, res) => {
   const games = db().get('games').value() || []
   const reviews = db().get('reviews').value() || []
   const votes = db().get('votes').value() || []
   const users = db().get('users').value() || []
+  const reports = db().get('reports').value() || [] 
 
   res.json({
     games: games.length,
     reviews: reviews.length,
     votes: votes.length,
     users: users.length,
-    featuredGames: games.filter((game) => game.featured).length
+    featuredGames: games.filter((game) => game.featured).length,
+    openReports: reports.filter((report) => report.status === 'open').length 
   })
 })
 
@@ -188,6 +228,53 @@ server.delete('/admin/reviews/:id', requireAdmin, (req, res) => {
   if (!review) return res.status(404).json({ message: 'Review not found.' })
 
   removeReviewWithVotes(reviewId)
+  res.status(204).end()
+})
+
+
+server.get('/admin/reports', requireAdmin, (req, res) => {
+  let reports = db().get('reports').sortBy('createdAt').reverse().value()
+  if (req.query.status) {
+    reports = reports.filter((report) => report.status === req.query.status)
+  }
+  res.json(reports)
+})
+
+
+server.patch('/admin/reports/:id', requireAdmin, (req, res) => {
+  const reportId = Number(req.params.id)
+  const report = db().get('reports').find({ id: reportId }).value()
+  if (!report) return res.status(404).json({ message: 'Report not found.' })
+
+  const status = String(req.body.status || 'resolved')
+  if (!['open', 'resolved'].includes(status)) {
+    return res.status(400).json({ message: 'Status must be "open" or "resolved".' })
+  }
+
+  db().get('reports').find({ id: reportId }).assign({ status }).write()
+  res.json({ ...report, status })
+})
+
+// [Person 5] dismiss every open report attached to one review in a single call
+server.post('/admin/reports/dismiss', requireAdmin, (req, res) => {
+  const reviewId = Number(req.body.reviewId)
+  if (!reviewId) return res.status(400).json({ message: 'A review id is required.' })
+
+  db().get('reports')
+    .filter({ reviewId, status: 'open' })
+    .each((report) => { report.status = 'resolved' })
+    .write()
+
+  res.json({ reviewId, dismissed: true })
+})
+
+
+server.delete('/admin/reports/:id', requireAdmin, (req, res) => {
+  const reportId = Number(req.params.id)
+  const report = db().get('reports').find({ id: reportId }).value()
+  if (!report) return res.status(404).json({ message: 'Report not found.' })
+
+  db().get('reports').remove({ id: reportId }).write()
   res.status(204).end()
 })
 
