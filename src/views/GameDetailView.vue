@@ -3,6 +3,7 @@ import { computed, ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { gamesApi, reviewsApi, usersApi } from '../services/api'
 import ReviewVoteButton from '../components/ReviewVoteButton.vue'
+import ReviewReportButton from '../components/ReviewReportButton.vue' // [Person 5]
 import { useAuthStore } from '../stores/auth'
 import ReviewRating from '../components/ReviewRating.vue'
 import ReviewForm from '../components/ReviewForm.vue'
@@ -259,6 +260,10 @@ watch(() => route.params.id, (id) => { if (id) load(id) })
             </div>
             <div class="review-action-panel text-md-end">
               <ReviewVoteButton :review-id="review.id" />
+              <!-- [Person 5] flag this review for moderation -->
+              <div class="mt-2">
+                <ReviewReportButton :review-id="review.id" />
+              </div>
             </div>
           </div>
         </div>
