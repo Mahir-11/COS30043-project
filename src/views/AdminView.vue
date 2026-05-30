@@ -12,6 +12,7 @@ const games = ref([])
 const reviews = ref([])
 const users = ref([])
 const votes = ref([])
+const reports = ref([]) // [Person 5]
 
 const gameSearch = ref('')
 const reviewSearch = ref('')
@@ -39,11 +40,39 @@ const stats = computed(() => ({
   reviews: reviews.value.length,
   votes: votes.value.length,
   users: users.value.length,
-  featured: games.value.filter((game) => game.featured).length
+  featured: games.value.filter((game) => game.featured).length,
+  openReports: reports.value.length // [Person 5]
 }))
 
 const userMap = computed(() => Object.fromEntries(users.value.map((user) => [Number(user.id), user])))
 const gameMap = computed(() => Object.fromEntries(games.value.map((game) => [Number(game.id), game])))
+
+// [Person 5] reviewMap and a grouped view of open reports for the moderation queue
+const reviewMap = computed(() => Object.fromEntries(reviews.value.map((review) => [Number(review.id), review])))
+
+const reportGroups = computed(() => {
+  const groups = {}
+  for (const report of reports.value) {
+    const key = Number(report.reviewId)
+    if (!groups[key]) {
+      const review = reviewMap.value[key] || null
+      groups[key] = {
+        reviewId: key,
+        review,
+        reviewTitle: review?.title || 'Deleted review',
+        reviewBody: review?.body || '',
+        gameTitle: review ? (gameMap.value[Number(review.gameId)]?.title || 'Deleted game') : '—',
+        authorName: review ? (userMap.value[Number(review.userId)]?.username || `User #${review.userId}`) : '—',
+        reports: []
+      }
+    }
+    groups[key].reports.push({
+      ...report,
+      reporterName: userMap.value[Number(report.userId)]?.username || `User #${report.userId}`
+    })
+  }
+  return Object.values(groups).sort((a, b) => b.reports.length - a.reports.length)
+})
 
 const filteredGames = computed(() => {
   const q = gameSearch.value.trim().toLowerCase()
@@ -150,17 +179,19 @@ async function loadDashboard() {
   success.value = ''
 
   try {
-    const [{ data: gameData }, { data: reviewData }, { data: userData }, { data: voteData }] = await Promise.all([
+    const [{ data: gameData }, { data: reviewData }, { data: userData }, { data: voteData }, { data: reportData }] = await Promise.all([
       gamesApi.list({ _sort: 'title', _order: 'asc' }),
       reviewsApi.list({ _sort: 'createdAt', _order: 'desc' }),
       usersApi.list(),
-      votesApi.list()
+      votesApi.list(),
+      adminApi.listReports({ status: 'open' }) // [Person 5]
     ])
 
     games.value = gameData
     reviews.value = reviewData
     users.value = userData
     votes.value = voteData
+    reports.value = reportData // [Person 5]
   } catch (e) {
     error.value = 'Could not load the dashboard. Check that the API server is running.'
   } finally {
@@ -222,6 +253,35 @@ async function deleteReview(review) {
   }
 }
 
+// [Person 5] dismiss every open report on a review (keeps the review)
+async function dismissReports(group) {
+  error.value = ''
+  success.value = ''
+  try {
+    await adminApi.dismissReports(group.reviewId)
+    await loadDashboard()
+    success.value = `Cleared ${group.reports.length} report(s) on "${group.reviewTitle}".`
+  } catch (e) {
+    error.value = e.response?.data?.message || 'Could not dismiss reports.'
+  }
+}
+
+// [Person 5] remove a reported review entirely (also clears its reports + likes)
+async function removeReportedReview(group) {
+  const confirmed = window.confirm(`Remove review "${group.reviewTitle}" from ${group.gameTitle}? This also clears its reports and likes.`)
+  if (!confirmed) return
+
+  error.value = ''
+  success.value = ''
+  try {
+    await adminApi.removeReview(group.reviewId)
+    await loadDashboard()
+    success.value = 'Reported review removed.'
+  } catch (e) {
+    error.value = e.response?.data?.message || 'Could not remove review.'
+  }
+}
+
 onMounted(loadDashboard)
 </script>
 
@@ -250,7 +310,8 @@ onMounted(loadDashboard)
         { label: 'Reviews', value: stats.reviews, icon: 'bi-chat-left-text' },
         { label: 'Likes', value: stats.votes, icon: 'bi-hand-thumbs-up' },
         { label: 'Users', value: stats.users, icon: 'bi-people' },
-        { label: 'Featured', value: stats.featured, icon: 'bi-star' }
+        { label: 'Featured', value: stats.featured, icon: 'bi-star' },
+        { label: 'Open reports', value: stats.openReports, icon: 'bi-flag' }
       ]" :key="item.label">
         <div class="card-tg p-3 h-100">
           <div class="d-flex align-items-center justify-content-between">
@@ -273,6 +334,13 @@ onMounted(loadDashboard)
       <li class="nav-item">
         <button class="nav-link" :class="{ active: activeTab === 'reviews' }" type="button" @click="activeTab = 'reviews'">
           Moderate reviews
+        </button>
+      </li>
+      <!-- [Person 5] Reports tab with live open-count badge -->
+      <li class="nav-item">
+        <button class="nav-link" :class="{ active: activeTab === 'reports' }" type="button" @click="activeTab = 'reports'">
+          Reports
+          <span v-if="stats.openReports" class="badge text-bg-danger ms-1">{{ stats.openReports }}</span>
         </button>
       </li>
     </ul>
@@ -403,7 +471,7 @@ onMounted(loadDashboard)
       </div>
     </section>
 
-    <section v-else>
+    <section v-else-if="activeTab === 'reviews'">
       <div class="card-tg p-3 p-md-4">
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-3">
           <div>
@@ -452,6 +520,57 @@ onMounted(loadDashboard)
             </li>
           </ul>
         </nav>
+      </div>
+    </section>
+
+    <!-- [Person 5] community moderation queue -->
+    <section v-else>
+      <div class="card-tg p-3 p-md-4">
+        <div class="mb-3">
+          <h4 class="mb-1">Reported content</h4>
+          <p class="text-muted-tg small mb-0">
+            Reviews flagged by the community. Dismiss the reports if the content is fine, or remove the review.
+          </p>
+        </div>
+
+        <div v-if="reportGroups.length === 0" class="text-center text-muted-tg py-5">
+          <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
+          <p class="mt-3 mb-0">Nothing in the queue — no open reports.</p>
+        </div>
+
+        <div v-for="group in reportGroups" :key="group.reviewId" class="border-bottom border-secondary-subtle py-3">
+          <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                <strong>{{ group.reviewTitle }}</strong>
+                <span class="badge text-bg-danger">
+                  <i class="bi bi-flag-fill me-1"></i>{{ group.reports.length }} report{{ group.reports.length === 1 ? '' : 's' }}
+                </span>
+              </div>
+              <p class="mb-1">{{ group.reviewBody }}</p>
+              <small class="text-muted-tg">{{ group.gameTitle }} · by {{ group.authorName }}</small>
+
+              <ul class="list-unstyled mt-2 mb-0 report-reason-list">
+                <li v-for="report in group.reports" :key="report.id" class="small mb-1">
+                  <span class="badge badge-genre me-2">{{ report.reason }}</span>
+                  <span class="text-muted-tg">
+                    by {{ report.reporterName }}
+                    <template v-if="report.note">— "{{ report.note }}"</template>
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="text-lg-end d-flex flex-row flex-lg-column gap-2 align-self-start">
+              <button class="btn btn-sm btn-outline-light" type="button" @click="dismissReports(group)">
+                <i class="bi bi-check2 me-1"></i>Dismiss
+              </button>
+              <button class="btn btn-sm btn-outline-danger" type="button" @click="removeReportedReview(group)">
+                <i class="bi bi-trash me-1"></i>Remove review
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </template>
