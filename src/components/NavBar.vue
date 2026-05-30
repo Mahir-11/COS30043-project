@@ -9,7 +9,7 @@ function logout() { auth.logout() }
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-tg sticky-top px-3 px-md-4 px-lg-5">
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-tg sticky-top px-3 px-md-4 px-lg-5">
     <router-link class="navbar-brand fw-bold text-light" to="/">
       <i class="bi bi-controller me-2 text-danger"></i>TierGG
     </router-link>

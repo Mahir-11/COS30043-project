@@ -143,7 +143,7 @@ async function load(id) {
     reviews.value = reviewData
     users.value = userData
   } catch (e) {
-    error.value = 'Game not found.'
+    error.value = e.message || 'Game not found.'
   } finally {
     loading.value = false
   }

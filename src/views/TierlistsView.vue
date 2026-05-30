@@ -263,7 +263,7 @@ async function load() {
     users.value = userRes.data
     reactions.value = reactRes.data
   } catch (err) {
-    error.value = 'Could not load tier lists. Is the API running?'
+    error.value = err.message || 'Could not load tier lists. Is the API running?'
   } finally {
     loading.value = false
   }

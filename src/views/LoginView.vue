@@ -26,29 +26,33 @@ async function login() {
   }
 
   try {
-    const { data } = await usersApi.list({
-      username: username.value
+    const { data } = await usersApi.create({
+      action: 'login',
+      username: username.value,
+      password: password.value
     })
 
-    const user = data[0]
-
-    if (!user || user.password !== password.value) {
+    if (!data.user || !data.token) {
       error.value = 'Invalid username or password'
       return
     }
 
     auth.setSession(
       {
-        id: user.id,
-        username: user.username,
-        role: user.role || 'user'
+        id: data.user.id,
+        username: data.user.username,
+        role: data.user.role || 'user'
       },
-      'demo-token-' + user.id
+      data.token
     )
 
     router.replace(route.query.redirect || '/')
   } catch (e) {
-    error.value = 'Login failed. Please check the API server.'
+    if (e.response && e.response.status === 401) {
+      error.value = 'Invalid username or password'
+    } else {
+      error.value = 'Login failed. Please check the API server.'
+    }
   }
 }
 </script>

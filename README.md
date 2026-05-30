@@ -147,8 +147,3 @@ npm run build
 # OR ship db.json as a static JSON file and switch to read-only mode for demo.
 ```
 
----
-
-## GenAI disclosure
-
-Per the unit outline, declare any generative AI usage in an appendix to the report.

@@ -45,23 +45,15 @@ async function register() {
   }
 
   try {
-    const exists = await usersApi.list({ username: username.value })
-
-    if (exists.data.length) {
-      error.value = 'Username already taken'
-      return
-    }
-
     const { data } = await usersApi.create({
+      action: 'register',
       username: username.value,
-      password: password.value,
-      role: 'user',
-      createdAt: new Date().toISOString()
+      password: password.value
     })
 
     auth.setSession(
-      { id: data.id, username: data.username, role: 'user' },
-      'demo-token-' + data.id
+      { id: data.user.id, username: data.user.username, role: 'user' },
+      data.token
     )
 
     success.value = 'Account created successfully'
@@ -70,7 +62,13 @@ async function register() {
       router.replace('/')
     }, 800)
   } catch (e) {
-    error.value = 'Registration failed. Please check the API server.'
+    if (e.response?.status === 409) {
+      error.value = 'Username already taken'
+    } else if (e.response?.data?.message) {
+      error.value = e.response.data.message
+    } else {
+      error.value = e.message || 'Registration failed. Please check the API server.'
+    }
   }
 }
 </script>
