@@ -381,6 +381,37 @@
       "createdAt": "2026-05-27T03:45:59.149Z"
     }
   ],
+
+  "reports": [
+    {
+      "id": 1,
+      "reviewId": 1,
+      "userId": 1,
+      "reason": "Spoilers",
+      "note": "Gives away a late-game boss.",
+      "status": "open",
+      "createdAt": "2026-02-06T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "reviewId": 1,
+      "userId": 2,
+      "reason": "Off-topic",
+      "note": "",
+      "status": "open",
+      "createdAt": "2026-02-06T09:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "reviewId": 2,
+      "userId": 1,
+      "reason": "Spam or advertising",
+      "note": "Looks like a copy-paste promo.",
+      "status": "open",
+      "createdAt": "2026-02-07T11:00:00.000Z"
+    }
+  ],
+  
   "genres": [
     {
       "id": 1,
