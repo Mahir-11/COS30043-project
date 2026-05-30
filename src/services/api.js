@@ -28,12 +28,18 @@ export const reviewsApi = {
   update: (id, data) => api.patch(`/reviews/${id}`, data),
   remove: (id) => api.delete(`/reviews/${id}`)
 }
+// person 4 - tier lists
 export const tierlistsApi = {
   list: (params) => api.get('/tierlists', { params }),
   get: (id) => api.get(`/tierlists/${id}`),
   create: (data) => api.post('/tierlists', data),
   update: (id, data) => api.patch(`/tierlists/${id}`, data),
   remove: (id) => api.delete(`/tierlists/${id}`)
+}
+export const tierlistReactionsApi = {
+  list: (params) => api.get('/tierlistReactions', { params }),
+  create: (data) => api.post('/tierlistReactions', data),
+  remove: (id) => api.delete(`/tierlistReactions/${id}`)
 }
 export const votesApi = {
   list: (params) => api.get('/votes', { params }),
