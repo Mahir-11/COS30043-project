@@ -10,8 +10,9 @@ Submitted for **COS30043 Interface Design and Development**, Swinburne Universit
 ```bash
 # 1. Install dependencies
 npm install
-
-# 2. Start the API and dev server together
+# 2. Install vuedraggable@next
+npm install vuedraggable@next
+# 3. Start the API and dev server together
 npm start
 ```
 
