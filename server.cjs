@@ -19,8 +19,8 @@ function nextId(collectionName) {
 }
 
 function getTokenUser(req) {
-  const header = req.headers.authorization || ''
-  const token = header.replace(/^Bearer\s+/i, '')
+  // Accept X-TG-Token (sent by the Vue frontend) or Authorization: Bearer <token>
+  const token = req.headers['x-tg-token'] || req.headers.authorization?.replace(/^Bearer\s+/i, '') || ''
   const match = token.match(/(\d+)$/)
   if (!match) return null
 
@@ -76,6 +76,28 @@ function removeReviewWithVotes(reviewId) {
 
 // [Person 5] allowed reasons a user can pick when flagging a review
 const REPORT_REASONS = ['Spam or advertising', 'Harassment or hate', 'Off-topic', 'Spoilers', 'Other']
+
+// Login handler — matches the same POST /users { action:'login' } the frontend sends.
+// json-server's default POST /users would just create a record, so we intercept first.
+server.post('/users', (req, res, next) => {
+  if (req.body.action !== 'login') return next()
+
+  const { username, password } = req.body
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required.' })
+  }
+
+  const user = db().get('users').find({ username }).value()
+  if (!user || user.password !== password) {
+    return res.status(401).json({ message: 'Invalid username or password.' })
+  }
+
+  const token = `tg_token_${user.id}`
+  res.json({
+    user: { id: user.id, username: user.username, role: user.role, createdAt: user.createdAt },
+    token
+  })
+})
 
 // Backend endpoint for the social feature. It prevents duplicate likes by the same user.
 server.post('/votes', requireAuth, (req, res) => {
@@ -151,6 +173,22 @@ server.post('/reports', requireAuth, (req, res) => {
   res.status(201).json(report)
 })
 
+
+// Translate PHP-style /admin?action=X[&id=Y] → REST paths the route handlers expect.
+// Must be a top-level middleware (no mount path) so it rewrites req.url before
+// Express's router matches the route.
+server.use((req, res, next) => {
+  if (/^\/admin(\?|$)/.test(req.url)) {
+    const action = req.query.action
+    if (action) {
+      const id = req.query.id
+      req.url = action === 'dismiss'
+        ? '/admin/reports/dismiss'
+        : id ? `/admin/${action}/${id}` : `/admin/${action}`
+    }
+  }
+  next()
+})
 
 server.get('/admin/stats', requireAdmin, (req, res) => {
   const games = db().get('games').value() || []

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { reportsApi } from '../services/api'
@@ -20,6 +20,31 @@ const note = ref('')
 const busy = ref(false)
 const error = ref('')
 const reported = ref(false)
+
+const triggerEl = ref(null)
+const panelStyle = ref({})
+
+function positionPanel() {
+  if (!triggerEl.value) return
+  const rect = triggerEl.value.getBoundingClientRect()
+  const panelW = Math.min(320, window.innerWidth * 0.9)
+  const spaceBelow = window.innerHeight - rect.bottom
+  const panelH = 260 // approximate panel height
+
+  const top = spaceBelow >= panelH
+    ? rect.bottom + 6
+    : rect.top - panelH - 6
+
+  const right = window.innerWidth - rect.right
+
+  panelStyle.value = {
+    position: 'fixed',
+    top: `${top}px`,
+    right: `${right}px`,
+    width: `${panelW}px`,
+    zIndex: 1055
+  }
+}
 
 const reviewIdNumber = computed(() => Number(props.reviewId))
 
@@ -46,7 +71,17 @@ function togglePanel() {
     return
   }
   open.value = !open.value
+  if (open.value) {
+    nextTick(positionPanel)
+  }
 }
+
+function onScroll() {
+  if (open.value) positionPanel()
+}
+
+onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 function cancel() {
   open.value = false
@@ -91,7 +126,7 @@ watch(reviewIdNumber, checkExisting)
 </script>
 
 <template>
-  <div class="review-report position-relative d-inline-block">
+  <div class="review-report d-inline-block">
     <button
       v-if="reported"
       class="btn btn-sm btn-outline-secondary"
@@ -103,6 +138,7 @@ watch(reviewIdNumber, checkExisting)
 
     <button
       v-else
+      ref="triggerEl"
       class="btn btn-sm btn-outline-secondary"
       type="button"
       :aria-expanded="open"
@@ -111,44 +147,43 @@ watch(reviewIdNumber, checkExisting)
       <i class="bi bi-flag me-1"></i>Report
     </button>
 
-    <!-- Inline reason picker -->
-    <div v-if="open" class="report-panel card-tg p-3 mt-2 text-start">
-      <label class="form-label small text-muted-tg mb-1">Why are you reporting this?</label>
-      <select v-model="reason" class="form-select form-select-sm mb-2">
-        <option value="" disabled>Choose a reason...</option>
-        <option v-for="r in REASONS" :key="r" :value="r">{{ r }}</option>
-      </select>
+    <!-- Teleport panel to <body> so it escapes any overflow:hidden ancestor -->
+    <Teleport to="body">
+      <div v-if="open" class="report-panel card-tg p-3 text-start" :style="panelStyle">
+        <label class="form-label small text-muted-tg mb-1">Why are you reporting this?</label>
+        <select v-model="reason" class="form-select form-select-sm mb-2">
+          <option value="" disabled>Choose a reason...</option>
+          <option v-for="r in REASONS" :key="r" :value="r">{{ r }}</option>
+        </select>
 
-      <textarea
-        v-model="note"
-        class="form-control form-control-sm mb-2"
-        rows="2"
-        maxlength="280"
-        placeholder="Add an optional note for the moderator..."
-      ></textarea>
+        <textarea
+          v-model="note"
+          class="form-control form-control-sm mb-2"
+          rows="2"
+          maxlength="280"
+          placeholder="Add an optional note for the moderator..."
+        ></textarea>
 
-      <div v-if="error" class="small text-warning mb-2">{{ error }}</div>
+        <div v-if="error" class="small text-warning mb-2">{{ error }}</div>
 
-      <div class="d-flex gap-2">
-        <button class="btn btn-sm btn-danger flex-grow-1" type="button" :disabled="busy" @click="submit">
-          <span v-if="busy" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
-          Submit report
-        </button>
-        <button class="btn btn-sm btn-outline-light" type="button" :disabled="busy" @click="cancel">
-          Cancel
-        </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-danger flex-grow-1" type="button" :disabled="busy" @click="submit">
+            <span v-if="busy" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+            Submit report
+          </button>
+          <button class="btn btn-sm btn-outline-light" type="button" :disabled="busy" @click="cancel">
+            Cancel
+          </button>
+        </div>
       </div>
-    </div>
+    </Teleport>
 
-    <div v-else-if="error" class="small text-warning mt-1">{{ error }}</div>
+    <div v-if="!open && error" class="small text-warning mt-1">{{ error }}</div>
   </div>
 </template>
 
 <style scoped>
 .report-panel {
-  position: absolute;
-  right: 0;
-  z-index: 20;
-  width: min(20rem, 80vw);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 </style>

@@ -13,7 +13,16 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        // 1. Strip /api prefix and .php suffix
+        // 2. Convert ?id=X to /X so json-server returns a single object, not an array
+        rewrite: (path) => {
+          let p = path.replace(/^\/api/, '').replace(/\.php(?=[?#]|$)/, '')
+          // ?id=X[&...] → /X[?...]  (primary-key lookup → REST path)
+          p = p.replace(/^([^?#]+)\?id=(\d+)(&(.*))?$/, (_, base, id, _amp, rest) =>
+            rest ? `${base}/${id}?${rest}` : `${base}/${id}`
+          )
+          return p
+        }
       }
     }
   }

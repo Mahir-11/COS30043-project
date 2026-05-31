@@ -4,6 +4,10 @@
  * Included at the top of every endpoint file.
  */
 
+// Buffer all output so PHP notices/warnings don't contaminate the JSON response
+// or flush headers prematurely.
+ob_start();
+
 // ── CORS & Headers ──────────────────────────────────────────────────────────
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS");
@@ -44,6 +48,8 @@ try {
 
 /** Send a JSON response and exit. */
 function jsonResponse($data, $code = 200) {
+    // Discard any PHP notices/warnings that leaked into the output buffer.
+    while (ob_get_level()) ob_end_clean();
     http_response_code($code);
     echo json_encode($data);
     exit;

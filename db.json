@@ -350,6 +350,15 @@
       "body": "55555555555555555555555",
       "createdAt": "2026-05-27T04:45:42.029Z",
       "id": 9
+    },
+    {
+      "gameId": 2,
+      "userId": 1,
+      "rating": 5,
+      "title": "My review",
+      "body": "It is the bvest game ever",
+      "createdAt": "2026-05-31T11:51:31.549Z",
+      "id": 10
     }
   ],
   "tierlists": [
@@ -442,6 +451,24 @@
       "note": "Looks like a copy-paste promo.",
       "status": "open",
       "createdAt": "2026-02-07T11:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "reviewId": 3,
+      "userId": 1,
+      "reason": "Spam or advertising",
+      "note": "local test",
+      "status": "open",
+      "createdAt": "2026-05-31T11:42:00.365Z"
+    },
+    {
+      "id": 5,
+      "reviewId": 10,
+      "userId": 1,
+      "reason": "Harassment or hate",
+      "note": "",
+      "status": "open",
+      "createdAt": "2026-05-31T11:51:37.993Z"
     }
   ],
   "tierlistReactions": [

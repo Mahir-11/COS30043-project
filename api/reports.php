@@ -52,7 +52,7 @@ if ($method === 'POST') {
 
     $reviewId = (int) (isset($body['reviewId']) ? $body['reviewId'] : 0);
     $reason   = trim(isset($body['reason']) ? $body['reason'] : '');
-    $note     = mb_substr(trim(isset($body['note']) ? $body['note'] : ''), 0, 280);
+    $note     = substr(trim(isset($body['note']) ? $body['note'] : ''), 0, 280);
 
     if (!$reviewId) jsonResponse(['message' => 'A review id is required.'], 400);
     if (!in_array($reason, $REPORT_REASONS)) {
@@ -71,14 +71,18 @@ if ($method === 'POST') {
         jsonResponse(['message' => 'You have already reported this review.'], 409);
     }
 
-    $stmt = $pdo->prepare("INSERT INTO reports (reviewId, userId, reason, note) VALUES (:r, :u, :reason, :note)");
-    $stmt->execute([
-        ':r'      => $reviewId,
-        ':u'      => (int) $user['id'],
-        ':reason' => $reason,
-        ':note'   => $note
-    ]);
-    $newId = (int) $pdo->lastInsertId();
+    try {
+        $stmt = $pdo->prepare("INSERT INTO reports (reviewId, userId, reason, note) VALUES (:r, :u, :reason, :note)");
+        $stmt->execute([
+            ':r'      => $reviewId,
+            ':u'      => (int) $user['id'],
+            ':reason' => $reason,
+            ':note'   => $note
+        ]);
+        $newId = (int) $pdo->lastInsertId();
+    } catch (PDOException $e) {
+        jsonResponse(['message' => 'Could not save report: ' . $e->getMessage()], 500);
+    }
 
     jsonResponse([
         'id' => $newId, 'reviewId' => $reviewId, 'userId' => (int)$user['id'],
