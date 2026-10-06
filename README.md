@@ -147,3 +147,4 @@ npm run build
 # OR ship db.json as a static JSON file and switch to read-only mode for demo.
 ```
 
+Test TP Git -- amélioration de la documentation.
